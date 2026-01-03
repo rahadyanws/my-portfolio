@@ -1,22 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Home, User, Briefcase, Mail, Moon, Sun } from "lucide-react";
+import { Home, User, Briefcase, Mail, Moon, Sun, Languages } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes"; // <--- Import useTheme
-
-const navItems = [
-    { name: "Home", href: "#", icon: Home },
-    { name: "About", href: "#about", icon: User },
-    { name: "Projects", href: "#projects", icon: Briefcase },
-    { name: "Contact", href: "#contact", icon: Mail },
-];
+import { useTheme } from "next-themes";
+import { useLanguage } from "@/context/LanguageContext"; // <--- Import Hook Hook
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
-    const { theme, setTheme } = useTheme(); // <--- Hook tema
+    const { theme, setTheme } = useTheme();
+    const { language, setLanguage, t } = useLanguage(); // <--- Gunakan Hook
     const [mounted, setMounted] = useState(false);
 
     // Mencegah error hydration mismatch
@@ -28,6 +23,13 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    const navItems = [
+        { name: t.nav.home, href: "#", icon: Home },
+        { name: t.nav.about, href: "#about", icon: User },
+        { name: t.nav.projects, href: "#projects", icon: Briefcase },
+        { name: t.nav.contact, href: "#contact", icon: Mail },
+    ];
 
     if (!mounted) return null;
 
@@ -60,7 +62,16 @@ export default function Navbar() {
                 {/* Separator Kecil */}
                 <div className="mx-1 h-6 w-[1px] bg-slate-200 dark:bg-slate-800"></div>
 
-                {/* TOMBOL TOGGLE THEME */}
+                {/* TOMBOL BAHASA */}
+                <button
+                    onClick={() => setLanguage(language === "en" ? "id" : "en")}
+                    className="relative flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700 text-xs font-bold"
+                    aria-label="Toggle Language"
+                >
+                    {language.toUpperCase()}
+                </button>
+
+                 {/* TOMBOL TOGGLE THEME */}
                 <button
                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                     className="relative flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-900 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
